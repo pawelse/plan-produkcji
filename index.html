@@ -14,10 +14,18 @@
         <div class="card top-bar">
             <div class="input-group">
                 <label for="data-raportu">Data raportu:</label>
-                <input type="date" id="data-raportu">
+                <input type="date" id="data-raportu" onchange="aktualizujInfoODacie()">
             </div>
+
+            <!-- Informacje o wybranej dacie -->
+            <div class="date-info" id="date-info">
+                <span id="info-dzien-tygodnia" style="font-weight: bold; color: #2563eb;">-</span> | 
+                Dzień roku: <strong id="info-dzien-roku">-</strong> | 
+                Tydzień: <strong id="info-tydzien">-</strong>
+            </div>
+
             <div class="button-group">
-                <button id="btn-odswiez" class="btn btn-secondary">Odśwież</button>
+                <button id="btn-odswiez" class="btn btn-secondary" onclick="location.reload()">Odśwież</button>
                 <button id="btn-pdf" class="btn btn-primary">Generuj PDF</button>
             </div>
         </div>
@@ -39,7 +47,7 @@
                         </tr>
                     </thead>
                     <tbody id="tbody-l1">
-                        <!-- Wiersze będą dodawane dynamicznie przez JS -->
+                        <!-- Wiersze dodawane dynamicznie -->
                     </tbody>
                 </table>
             </div>
@@ -67,7 +75,7 @@
                         </tr>
                     </thead>
                     <tbody id="tbody-l2">
-                        <!-- Wiersze będą dodawane dynamicznie przez JS -->
+                        <!-- Wiersze dodawane dynamicznie -->
                     </tbody>
                 </table>
             </div>
