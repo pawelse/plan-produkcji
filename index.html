@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raporty Produkcyjne</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Raport Produkcyjny</h1>
+        
+        <!-- Pasek wyboru daty i akcji -->
+        <div class="card top-bar">
+            <div class="input-group">
+                <label for="data-raportu">Data raportu:</label>
+                <input type="date" id="data-raportu">
+            </div>
+            <div class="button-group">
+                <button id="btn-odswiez" class="btn btn-secondary">Odśwież</button>
+                <button id="btn-pdf" class="btn btn-primary">Generuj PDF</button>
+            </div>
+        </div>
+
+        <!-- LINIA 1 -->
+        <div class="card">
+            <h2>Linia 1 (L1)</h2>
+            <div class="table-wrapper">
+                <table id="tabela-l1">
+                    <thead>
+                        <tr>
+                            <th>Klient</th>
+                            <th>Indeks wyrobu</th>
+                            <th>Szarża zam. (szt)</th>
+                            <th>Plan (kg)</th>
+                            <th>Szarża wyk. (szt)</th>
+                            <th>Wykonano (kg)</th>
+                            <th>Akcja</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-l1">
+                        <!-- Wiersze będą dodawane dynamicznie przez JS -->
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn btn-add" onclick="dodajWiersz('tbody-l1')">+ Dodaj pozycję L1</button>
+            
+            <div class="podsumowanie-linia">
+                <strong>SUMA L1:</strong> Wykonano: <span id="suma-l1-kg">0</span> kg
+            </div>
+        </div>
+
+        <!-- LINIA 2 -->
+        <div class="card">
+            <h2>Linia 2 (L2)</h2>
+            <div class="table-wrapper">
+                <table id="tabela-l2">
+                    <thead>
+                        <tr>
+                            <th>Klient</th>
+                            <th>Indeks wyrobu</th>
+                            <th>Szarża zam. (szt)</th>
+                            <th>Plan (kg)</th>
+                            <th>Szarża wyk. (szt)</th>
+                            <th>Wykonano (kg)</th>
+                            <th>Akcja</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-l2">
+                        <!-- Wiersze będą dodawane dynamicznie przez JS -->
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn btn-add" onclick="dodajWiersz('tbody-l2')">+ Dodaj pozycję L2</button>
+            
+            <div class="podsumowanie-linia">
+                <strong>SUMA L2:</strong> Wykonano: <span id="suma-l2-kg">0</span> kg
+            </div>
+        </div>
+
+        <!-- PODSUMOWANIE CAŁEGO DNIA -->
+        <div class="card suma-dzien-card">
+            <h2>SUMA DZIEŃ</h2>
+            <div class="suma-dzien-wynik">
+                Łącznie wykonano: <strong id="suma-dzien-kg">0</strong> kg
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
