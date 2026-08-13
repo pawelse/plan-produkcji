@@ -14,7 +14,7 @@
         <div class="card top-bar">
             <div class="input-group">
                 <label for="data-raportu">Data raportu:</label>
-                <input type="date" id="data-raportu" onchange="aktualizujInfoODacie()">
+                <input type="date" id="data-raportu" onchange="przeliczWszystkiePartieIInfo()">
             </div>
 
             <!-- Informacje o wybranej dacie -->
@@ -39,6 +39,7 @@
                 <table id="tabela-l1">
                     <thead>
                         <tr>
+                            <th>Partia</th>
                             <th>Klient</th>
                             <th>Indeks wyrobu</th>
                             <th>Szarża zam. (szt)</th>
@@ -53,7 +54,7 @@
                     </tbody>
                 </table>
             </div>
-            <button class="btn btn-add" onclick="dodajWiersz('tbody-l1')">+ Dodaj pozycję L1</button>
+            <button class="btn btn-add" onclick="dodajWiersz('tbody-l1', '10')">+ Dodaj pozycję L1</button>
             
             <div class="podsumowanie-linia">
                 <strong>SUMA L1:</strong> Wykonano: <span id="suma-l1-kg">0</span> kg
@@ -67,6 +68,7 @@
                 <table id="tabela-l2">
                     <thead>
                         <tr>
+                            <th>Partia</th>
                             <th>Klient</th>
                             <th>Indeks wyrobu</th>
                             <th>Szarża zam. (szt)</th>
@@ -81,7 +83,7 @@
                     </tbody>
                 </table>
             </div>
-            <button class="btn btn-add" onclick="dodajWiersz('tbody-l2')">+ Dodaj pozycję L2</button>
+            <button class="btn btn-add" onclick="dodajWiersz('tbody-l2', '20')">+ Dodaj pozycję L2</button>
             
             <div class="podsumowanie-linia">
                 <strong>SUMA L2:</strong> Wykonano: <span id="suma-l2-kg">0</span> kg
