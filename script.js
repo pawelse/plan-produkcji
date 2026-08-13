@@ -1,16 +1,20 @@
-// Ustawienie domyślnej dzisiejszej daty po załadowaniu
 document.addEventListener('DOMContentLoaded', () => {
     const today = new Date().toISOString().split('T')[0];
     const dataInput = document.getElementById('data-raportu');
     dataInput.value = today;
     
-    // Oblicz i wyświetl szczegóły daty dla dzisiejszego dnia
     aktualizujInfoODacie();
 
-    // Dodaj po jednym pustym wierszu na start do L1 i L2
-    dodajWiersz('tbody-l1');
-    dodajWiersz('tbody-l2');
+    // Dodaj po jednym wierszu na start do L1 (linia 10) i L2 (linia 20)
+    dodajWiersz('tbody-l1', '10');
+    dodajWiersz('tbody-l2', '20');
 });
+
+// Zbiorcza funkcja wywoływana przy zmianie daty
+function przeliczWszystkiePartieIInfo() {
+    aktualizujInfoODacie();
+    odswiezWszystkiePartie();
+}
 
 // Funkcja wyliczająca nazwisko dnia, dzień roku oraz nr tygodnia
 function aktualizujInfoODacie() {
@@ -19,17 +23,14 @@ function aktualizujInfoODacie() {
 
     const d = new Date(dataVal + 'T00:00:00');
 
-    // 1. Nazwa dnia tygodnia po polsku
     const dniTygodnia = ['Niedziela', 'Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota'];
     const nazwaDnia = dniTygodnia[d.getDay()];
 
-    // 2. Dzień roku (1 - 365/366)
     const startRoku = new Date(d.getFullYear(), 0, 0);
     const roznicaCzasu = d - startRoku;
     const jedenDzien = 1000 * 60 * 60 * 24;
     const dzienRoku = Math.floor(roznicaCzasu / jedenDzien);
 
-    // 3. Numer tygodnia roku (ISO 8601)
     const target = new Date(d.valueOf());
     const dayNr = (d.getDay() + 6) % 7;
     target.setDate(target.getDate() - dayNr + 3);
@@ -40,18 +41,50 @@ function aktualizujInfoODacie() {
     }
     const numerTygodnia = 1 + Math.round((firstThursday - target) / (7 * 24 * 3600 * 1000));
 
-    // Wyświetlenie wyników w oknie
     document.getElementById('info-dzien-tygodnia').textContent = nazwaDnia;
     document.getElementById('info-dzien-roku').textContent = dzienRoku;
     document.getElementById('info-tydzien').textContent = numerTygodnia;
 }
 
-// Funkcja dodająca nowy wiersz do wybranej tabeli
-function dodajWiersz(tbodyId) {
+// Funkcja generująca numer partii w formacie: YY|DDD|ZZ|A|B|C|E
+function generujKodPartii(nrLinii, paramB = "5", paramC = "0", paramE = "1") {
+    const dataVal = document.getElementById('data-raportu').value;
+    if (!dataVal) return '';
+
+    const d = new Date(dataVal + 'T00:00:00');
+    
+    // YY - rok (dwie ostatnie cyfry)
+    const yy = d.getFullYear().toString().slice(-2);
+
+    // DDD - dzień roku + 2 (zawsze 3 cyfry, np. 005, 023, 214)
+    const startRoku = new Date(d.getFullYear(), 0, 0);
+    const roznicaCzasu = d - startRoku;
+    const jedenDzien = 1000 * 60 * 60 * 24;
+    const dzienRoku = Math.floor(roznicaCzasu / jedenDzien);
+    const ddd = String(dzienRoku + 2).padStart(3, '0');
+
+    // ZZ - linia (10 dla L1, 20 dla L2)
+    const zz = nrLinii;
+
+    // A - zakład (stała: 2)
+    const a = "2";
+
+    // Składamy w całość
+    return `${yy}${ddd}${zz}${a}${paramB}${paramC}${paramE}`;
+}
+
+// Dodawanie wiersza z polem Partia i opcjami
+function dodajWiersz(tbodyId, nrLinii) {
     const tbody = document.getElementById(tbodyId);
     const newRow = document.createElement('tr');
+    newRow.setAttribute('data-linia', nrLinii);
     
+    const kodPartii = generujKodPartii(nrLinii);
+
     newRow.innerHTML = `
+        <td>
+            <input type="text" class="input-partia" value="${kodPartii}" readonly style="background-color: #f1f5f9; font-weight: bold; width: 110px;">
+        </td>
         <td><input type="text" placeholder="np. Klient A"></td>
         <td><input type="text" placeholder="np. IND-123"></td>
         <td><input type="number" class="input-szarza-zam" min="0" value="0"></td>
@@ -65,14 +98,24 @@ function dodajWiersz(tbodyId) {
     przeliczSumy();
 }
 
-// Funkcja usuwająca wiersz
+// Odświeżanie kodów partii po zmianie daty
+function odswiezWszystkiePartie() {
+    const wiersze = document.querySelectorAll('tbody tr');
+    wiersze.forEach(row => {
+        const nrLinii = row.getAttribute('data-linia');
+        const inputPartia = row.querySelector('.input-partia');
+        if (inputPartia && nrLinii) {
+            inputPartia.value = generujKodPartii(nrLinii);
+        }
+    });
+}
+
 function usunWiersz(button) {
     const row = button.closest('tr');
     row.remove();
     przeliczSumy();
 }
 
-// Funkcja przeliczająca sumy w czasie rzeczywistym
 function przeliczSumy() {
     let sumaL1 = 0;
     let sumaL2 = 0;
